@@ -18,7 +18,7 @@ subway = subway()
     预处理模块
 '''
 # 读取表格数据
-data = xlrd.open_workbook(r'/home/zhaowentao/桌面/列车数据.xlsx')
+data = xlrd.open_workbook(r'/home/storm/桌面/蚁群存储信息/列车数据3.xlsx')
 table = data.sheets()[0]
 # 获取列表的行列，并构建相应的矩阵存储数据
 rowNum = table.nrows
@@ -144,13 +144,13 @@ for i in range(1,s_sli-2):
             V_E_cal(1,i,s,end,vk,ik,R,L,v_li)
 
 #把矩阵保存到磁盘，生成一个文件ECH
-joblib.dump(ECH,'/home/zhaowentao/桌面/蚁群矩阵信息/ECH')
-joblib.dump(TCH,'/home/zhaowentao/桌面/蚁群矩阵信息/TCH')
-joblib.dump(LK,'/home/zhaowentao/桌面/蚁群矩阵信息/LK')
-joblib.dump(SCH,'/home/zhaowentao/桌面/蚁群矩阵信息/SCH')
-joblib.dump(matrix,'/home/zhaowentao/桌面/蚁群矩阵信息/matrix')
+joblib.dump(ECH,'/home/storm/桌面/蚁群矩阵信息/ECH')
+joblib.dump(TCH,'/home/storm/桌面/蚁群矩阵信息/TCH')
+joblib.dump(LK,'/home/storm/桌面/蚁群矩阵信息/LK')
+joblib.dump(SCH,'/home/storm/桌面/蚁群矩阵信息/SCH')
+joblib.dump(matrix,'/home/storm/桌面/蚁群矩阵信息/matrix')
 
-f=open('/home/zhaowentao/桌面/蚁群矩阵信息/v_s.txt','wb')
+f=open('/home/storm/桌面/蚁群矩阵信息/v_s.txt','wb')
 pickle.dump(v_s,f)
 f.close()
 

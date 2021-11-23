@@ -13,11 +13,12 @@ from Pretreatment import SVEM
 import joblib
 import time
 
+time_start = time.time()
 # 数据读取
-ECH = joblib.load('/home/zhaowentao/桌面/蚁群矩阵信息/ECH')
-TCH = joblib.load('/home/zhaowentao/桌面/蚁群矩阵信息/TCH')
-matrix = joblib.load('/home/zhaowentao/桌面/蚁群矩阵信息/matrix')
-v_s = joblib.load('/home/zhaowentao/桌面/蚁群矩阵信息/v_s.txt')
+ECH = joblib.load('/home/storm/桌面/蚁群存储信息/ECH')
+TCH = joblib.load('/home/storm/桌面/蚁群存储信息/TCH')
+matrix = joblib.load('/home/storm/桌面/蚁群存储信息/matrix')
+v_s = joblib.load('/home/storm/桌面/蚁群存储信息/v_s.txt')
 vs = v_s[0]
 vk = int(vs)
 s_sli = v_s[1]
@@ -202,7 +203,9 @@ for m in range(ITER):
             best_mx[1,n] = ant_vmx[best_id,-2]
             best_mx[2,n] = ant_vmx[best_id,-1]
             best_mx[3,n] = ant_smx[best_id,n]
-
+time_end = time.time()
+time_total = time_start-time_end
+print("time:",time_total)
 print(tm)
 s_pic = 50
 dis_x = []

@@ -1,7 +1,7 @@
 import numpy as np
 import xlrd
 # 读取表格数据
-data = xlrd.open_workbook(r'/home/zhaowentao/桌面/列车数据.xlsx')
+data = xlrd.open_workbook(r'/home/storm/桌面/蚁群存储信息/列车数据3.xlsx')
 table = data.sheets()[0]
 # 获取列表的行列，并构建相应的矩阵存储数据
 rowNum = table.nrows
@@ -166,6 +166,7 @@ class subway:
             elif start <= loc_[i] and end <= loc_[i]:
                 for j in range(start*100,loc_[i]*100):
                     if np.isnan(vk) or vk < 0:
+                        print("制动vk是：",vk)
                         return -1,0,t,4
                     B_j = self.f_B(vk)
                     W_j = self.W_calculate(vk,ik,R,L)

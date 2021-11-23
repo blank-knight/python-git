@@ -12,7 +12,7 @@ subway = subway()
     预处理模块
 '''
 # 读取表格数据
-data = xlrd.open_workbook(r'/home/zhaowentao/桌面/列车数据.xlsx')
+data = xlrd.open_workbook(r'/home/storm/桌面/蚁群存储信息/列车数据3.xlsx')
 table = data.sheets()[0]
 # 获取列表的行列，并构建相应的矩阵存储数据
 rowNum = table.nrows
@@ -114,7 +114,7 @@ if __name__ == "__main__":
     for i in range (h):
         for j in range (l):
             sheet1.write(i,j,Ju_mx[i,j])
-    filename.save('/home/zhaowentao/桌面/Ju_mx1.xls')
+    filename.save('/home/storm/桌面/蚁群存储信息/Ju_mx1.xls')
 
     plt.matshow(SVEM1)
     plt.matshow(Ju_mx)
