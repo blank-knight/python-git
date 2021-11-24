@@ -79,7 +79,7 @@ def SVEM():
             for k in range(int(vk)+1):
                 SVEM1[v_max-k-1,i-1] = 1
     
-    s_pic = 50
+    s_pic = 100
     # dis_x = []
     # dis_y = []
     (ALPHA, BETA, RHO, Q,T) = (1.0,2.0,0.5,100.0,0.033)

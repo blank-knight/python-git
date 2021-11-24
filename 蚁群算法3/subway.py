@@ -10,7 +10,7 @@ class subway:
         self.C = 0.001807
         self.c = 600
         self.s = 0.01
-        self.s_sli = 50
+        self.s_sli = 100
         self.g = 9.98
 
     # KN

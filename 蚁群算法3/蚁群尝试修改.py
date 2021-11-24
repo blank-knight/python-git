@@ -27,7 +27,7 @@ v_s = joblib.load('/home/storm/桌面/蚁群存储信息/v_s.txt')
 vs = v_s[0]
 vk = int(vs)
 s_sli = v_s[1]
-s_pic = 50
+s_pic = 100
 
 subway = subway()
 SVEM1,Ju_mx = SVEM()
@@ -77,7 +77,7 @@ solu_y[-1] = 0
 '''
 
 # 能耗，时间启发因子，信息素衰减因子，蚂蚁数量，迭代次数,时间限制(s)
-(ALPHA, BETA,R,NUM,ITER,TIME) = (3,2,0.7,10,10,500)
+(ALPHA, BETA,R,NUM,ITER,TIME) = (3,2,0.7,1,10,500)
 col = Ju_mx.shape[1]+2
 # d_x = []
 # d_y = []

@@ -88,7 +88,7 @@ def V_E_cal(cla,x,start,end,vk,ik,R,L,v_lim):
 '''
 (ALPHA, BETA, RHO, Q,T) = (2.0,4.0,0.4,400.0,150)
 # 计算可行速度节点(注意，这里不能出现50整数倍的距离)
-s_pic = 50
+s_pic = 100
 s_sli = s_max//s_pic+1
 v_sli = v_max//1
 # 获取最大可行解矩阵，将LK设为信息素矩阵
