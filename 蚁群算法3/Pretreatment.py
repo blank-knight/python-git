@@ -79,17 +79,27 @@ def SVEM():
             for k in range(int(vk)+1):
                 SVEM1[v_max-k-1,i-1] = 1
     
-    s_pic = 100
+    solu_pic = 30
+    s_pic = 400
     # dis_x = []
     # dis_y = []
-    (ALPHA, BETA, RHO, Q,T) = (1.0,2.0,0.5,100.0,0.033)
     # 28
+    # 划分最大的
     length = SVEM1.shape[1]//s_pic+2
     new_mx = np.zeros((SVEM1.shape[0],length))
     # 27
     for i in range(0,length-1):
         new_mx[:,i] = SVEM1[:,i*s_pic]
     new_mx[:,-1] = SVEM1[:,-1]
+
+
+    # 最大可行解空间矩阵
+    length = SVEM1.shape[1]//solu_pic+2
+    solu_mx = np.zeros((SVEM1.shape[0],length))
+    # 27
+    for i in range(0,length-1):
+        solu_mx[:,i] = SVEM1[:,i*solu_pic]
+    solu_mx[:,-1] = SVEM1[:,-1]
     # print(SVEM1[:,-1])
     # for i in range(new_mx.shape[1]):
     #     lis = list(new_mx[:,i])
@@ -101,13 +111,13 @@ def SVEM():
     #             break
     # plt.scatter(dis_x,dis_y)
     # plt.show()
-    return SVEM1,new_mx
+    return SVEM1,new_mx,solu_mx
 
 if __name__ == "__main__":
     # 矩阵写入表格
     import xlwt 
     from Pretreatment import SVEM
-    SVEM1,Ju_mx = SVEM()
+    SVEM1,Ju_mx,so_mx = SVEM()
     filename = xlwt.Workbook() #创建工作簿
     sheet1 = filename.add_sheet(u'sheet1',cell_overwrite_ok=True) #创建sheet
     [h,l]=Ju_mx.shape #h为行数，l为列数
@@ -118,6 +128,7 @@ if __name__ == "__main__":
 
     plt.matshow(SVEM1)
     plt.matshow(Ju_mx)
+    plt.matshow(so_mx)
     plt.show()
 
 

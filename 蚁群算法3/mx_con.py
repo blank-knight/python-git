@@ -86,9 +86,10 @@ def V_E_cal(cla,x,start,end,vk,ik,R,L,v_lim):
 '''
     构建距离、速度、能耗可行解矩阵,初始化
 '''
-(ALPHA, BETA, RHO, Q,T) = (2.0,4.0,0.4,400.0,150)
+# (ALPHA, BETA,R,NUM,ITER,TIME) = (3,2,0.7,1,10,500)
+(ALPHA, BETA) = (3.0,2.0)
 # 计算可行速度节点(注意，这里不能出现50整数倍的距离)
-s_pic = 100
+s_pic = 400
 s_sli = s_max//s_pic+1
 v_sli = v_max//1
 # 获取最大可行解矩阵，将LK设为信息素矩阵
@@ -144,13 +145,13 @@ for i in range(1,s_sli-2):
             V_E_cal(1,i,s,end,vk,ik,R,L,v_li)
 
 #把矩阵保存到磁盘，生成一个文件ECH
-joblib.dump(ECH,'/home/storm/桌面/蚁群矩阵信息/ECH')
-joblib.dump(TCH,'/home/storm/桌面/蚁群矩阵信息/TCH')
-joblib.dump(LK,'/home/storm/桌面/蚁群矩阵信息/LK')
-joblib.dump(SCH,'/home/storm/桌面/蚁群矩阵信息/SCH')
-joblib.dump(matrix,'/home/storm/桌面/蚁群矩阵信息/matrix')
+joblib.dump(ECH,'/home/storm/桌面/蚁群存储信息/ECH')
+joblib.dump(TCH,'/home/storm/桌面/蚁群存储信息/TCH')
+joblib.dump(LK,'/home/storm/桌面/蚁群存储信息/LK')
+joblib.dump(SCH,'/home/storm/桌面/蚁群存储信息/SCH')
+joblib.dump(matrix,'/home/storm/桌面/蚁群存储信息/matrix')
 
-f=open('/home/storm/桌面/蚁群矩阵信息/v_s.txt','wb')
+f=open('/home/storm/桌面/蚁群存储信息/v_s.txt','wb')
 pickle.dump(v_s,f)
 f.close()
 

@@ -27,24 +27,26 @@ v_s = joblib.load('/home/storm/桌面/蚁群存储信息/v_s.txt')
 vs = v_s[0]
 vk = int(vs)
 s_sli = v_s[1]
-s_pic = 100
+s_pic = 400
 
 subway = subway()
-SVEM1,Ju_mx = SVEM()
+SVEM1,Ju_mx,sol_mx = SVEM()
 
 solu_x = []
 solu_y = []
 k = 0
-for i in range(Ju_mx.shape[1]):
-    for j in Ju_mx[:,i]:
+for i in range(sol_mx.shape[1]):
+    for j in sol_mx[:,i]:
         k += 1
         if j == 1:
-            solu_x.append(i*50)
+            solu_x.append(i*30)
             solu_y.append(80-k)
             k = 0
             break
 solu_y[0] = 0
 solu_y[-1] = 0
+# plt.plot(solu_x,solu_y)
+# plt.show()
 
 # '''
 #     随机数生成
@@ -286,10 +288,10 @@ for m in range(ITER):
 time_end = time.time()
 time_total = time_end-time_start
 # print(tm)
-s_pic = 50
+s_pic = 400
 dis_x = []
 dis_y = []
-dis_x = [x*50 for x in range(0,col-2)]
+dis_x = [x*s_pic for x in range(0,col-2)]
 print("dis_x:",dis_x) 
 dis_y = list(best_mx[0,0:-3])
 dis_y.insert(0,0)
