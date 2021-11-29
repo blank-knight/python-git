@@ -1,4 +1,3 @@
-# coding=utf-8
 from os import TMP_MAX
 import random
 from re import M, U
@@ -16,9 +15,7 @@ import time
 from collections import Counter 
 import xlwt 
 import matplotlib as mpl
-import os
 
-time_start = time.time()
 # 数据读取
 ECH = joblib.load('/home/storm/桌面/蚁群存储信息/ECH')
 TCH = joblib.load('/home/storm/桌面/蚁群存储信息/TCH')
@@ -27,7 +24,8 @@ v_s = joblib.load('/home/storm/桌面/蚁群存储信息/v_s.txt')
 vs = v_s[0]
 vk = int(vs)
 s_sli = v_s[1]
-s_pic = 400
+s_pic = 50
+time_start = time.time()
 
 subway = subway()
 SVEM1,Ju_mx,sol_mx = SVEM()
@@ -39,47 +37,45 @@ for i in range(sol_mx.shape[1]):
     for j in sol_mx[:,i]:
         k += 1
         if j == 1:
-            solu_x.append(i*30)
+            solu_x.append(i*50)
             solu_y.append(80-k)
             k = 0
             break
 solu_y[0] = 0
 solu_y[-1] = 0
-# plt.plot(solu_x,solu_y)
-# plt.show()
 
-# '''
-#     随机数生成
-# '''
-# def p_random(arr1,arr2):
-#     assert len(arr1) == len(arr2), "Length does not match."
-#     assert sum(arr2) == 1 , "Total rate is not 1."
+'''
+    随机数生成
+'''
+def p_random(arr1,arr2):
+    assert len(arr1) == len(arr2), "Length does not match."
+    assert sum(arr2) == 1 , "Total rate is not 1."
 
-#     # 提取小数点后面的位数。0.209年变209(str)
-#     sup_list = [len(str(i).split(".")[-1]) for i in arr2]
-#     # 找到最大的位数。1000
-#     top = 10 ** max(sup_list)
-#     # 将其全部化为整数。209(int)
-#     new_rate = [int(i*top) for i in arr2]
-#     rate_arr = []
-#     # 依次求和。209，500，1000
-#     for i in range(1,len(new_rate)+1):
-#         rate_arr.append(sum(new_rate[:i]))
-#     rand = random.randint(1,top)
-#     data = None
-#     # 判断产生的随机数在哪个区间段
-#     for i in range(len(rate_arr)):
-#         if rand <= rate_arr[i]:
-#             data = arr1[i]
-#             break
-#     return data
+    # 提取小数点后面的位数。0.209年变209(str)
+    sup_list = [len(str(i).split(".")[-1]) for i in arr2]
+    # 找到最大的位数。1000
+    top = 10 ** max(sup_list)
+    # 将其全部化为整数。209(int)
+    new_rate = [int(i*top) for i in arr2]
+    rate_arr = []
+    # 依次求和。209，500，1000
+    for i in range(1,len(new_rate)+1):
+        rate_arr.append(sum(new_rate[:i]))
+    rand = random.randint(1,top)
+    data = None
+    # 判断产生的随机数在哪个区间段
+    for i in range(len(rate_arr)):
+        if rand <= rate_arr[i]:
+            data = arr1[i]
+            break
+    return data
 
 '''
     蚁群模块
 '''
 
 # 能耗，时间启发因子，信息素衰减因子，蚂蚁数量，迭代次数,时间限制(s)
-(ALPHA, BETA,R,NUM,ITER,TIME) = (3,2,0.7,1,10,500)
+(ALPHA, BETA,R,NUM,ITER,TIME) = (2,1,0.5,1,10,198)
 col = Ju_mx.shape[1]+2
 # d_x = []
 # d_y = []
@@ -107,8 +103,6 @@ ant_emx = np.zeros((NUM,col))
 E_st,ant_emx[:,0] = ECH[-vk,1],ECH[-vk,1]
 ant_tmx = np.zeros((NUM,col))
 T_st,ant_tmx[:,0] = TCH[-vk,1],TCH[-vk,1]*3600
-ant_vmx[:,-1],ant_vmx[:,-2] = 9999999999,9999999999
-ant_smx[:,-1],ant_smx[:,-2] = 9999999999,9999999999
 # 把ECH变为信息素矩阵
 LCH = np.zeros((ECH.shape[0],ECH.shape[1]))
 # 存储当前最优，第一行为速度，第二行为能耗，第三行为时间，第四行为状态，后两列均为总能耗和总时间
@@ -164,7 +158,7 @@ def next_sta_pro(x,start,end,vk,ik,R,L,v_lim):
     # 以0.4的概率进行随机游走
     if pro < 0.2:
         id = random.choice(ch_lis)
-        # print("随机变异的id为",id)
+        print("随机变异的id为",id)
         # print(v_lis2)
         # print(v_lim)
         # 计算信息素 
@@ -206,7 +200,7 @@ for m in range(ITER):
         '''
         for j in range(1,s_sli-1):
             if j < s_sli-2:
-                # print(j)
+                print(j)
                 s += s_pic
                 end = s+s_pic
                 s_id = np.where(matrix[:,0]>s)[0][0]
@@ -218,10 +212,9 @@ for m in range(ITER):
                 flag,next_v,next_E,next_T,next_sta = next_sta_pro(j,s,end,vk,ik,R,L,v_li)
                 # flag为0说明此蚂蚁走进了死胡同，放弃此蚂蚁
                 if flag == 0:
-                    print("flag==0")
                     break
                 vk = int(next_v)
-                # print("下一节点速度为{0}".format(next_v))
+                print("下一节点速度为{0}".format(next_v))
                 E_tol += next_E
                 T_tol += next_T
                 ant_smx[i,j] = next_sta
@@ -238,7 +231,6 @@ for m in range(ITER):
             start = end
             end = matrix[-1,0]
             next_v,next_E,next_T,next_sta = subway.Zhi_dong(start,end,vk,ik,R,L,matrix)
-            print("next_v:",next_v)
             if next_v != 0:
                 LCH[-vk-1,j] = -99
                 Ju_mx[-vk-1,j] = 0
@@ -246,8 +238,6 @@ for m in range(ITER):
             # print(next_v)
             T_tol += next_T
             E_tol += next_E
-            print("T_tol:",T_tol)
-            print("E_tol:",E_tol) # print("下一节点速度为{0}".format(next_v))
             ant_smx[i,j] = next_sta
             ant_vmx[i,j] = next_v
         if flag == 0:
@@ -257,8 +247,8 @@ for m in range(ITER):
             tm += 1
             # print("Time Out")
             # time.sleep(2)
-            # ant_vmx[i,-1],ant_vmx[i,-2] = 9999999999,9999999999
-            # ant_smx[i,-1],ant_smx[i,-2] = 9999999999,9999999999
+            ant_vmx[i,-1],ant_vmx[i,-2] = 9999999999,9999999999
+            ant_smx[i,-1],ant_smx[i,-2] = 9999999999,9999999999
             continue
         ant_vmx[i,-1],ant_vmx[i,-2] = T_tol,E_tol
         ant_smx[i,-1],ant_smx[i,-2] = T_tol,E_tol
@@ -266,7 +256,6 @@ for m in range(ITER):
     # 返回能耗最小的蚂蚁
     best_id = ant_smx.argmin(axis=0)[-2]
     # 判断此次是否是第一次迭代或者此次的蚂蚁能耗是否小于目前最优蚂蚁
-
     if best_mx[0,-2] == 0 or ant_vmx[best_id,-2] < best_mx[0,-2]:
         for n in range(col-2):
             best_mx[0,n] = ant_vmx[best_id,n]
@@ -285,10 +274,11 @@ for m in range(ITER):
     # ant_emx[:,0] = ECH[-vk,1]
     # ant_tmx[:,0] = TCH[-vk,1]*3600
     
+
 time_end = time.time()
 time_total = time_end-time_start
 # print(tm)
-s_pic = 400
+s_pic = 50
 dis_x = []
 dis_y = []
 dis_x = [x*s_pic for x in range(0,col-2)]

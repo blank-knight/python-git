@@ -12,7 +12,7 @@ subway = subway()
     预处理模块
 '''
 # 读取表格数据
-data = xlrd.open_workbook(r'/home/storm/桌面/蚁群存储信息/列车数据3.xlsx')
+data = xlrd.open_workbook(r'/home/storm/桌面/蚁群存储信息/列车数据.xlsx')
 table = data.sheets()[0]
 # 获取列表的行列，并构建相应的矩阵存储数据
 rowNum = table.nrows
@@ -79,12 +79,12 @@ def SVEM():
             for k in range(int(vk)+1):
                 SVEM1[v_max-k-1,i-1] = 1
     
-    solu_pic = 30
-    s_pic = 400
+    s_pic = 50
+    solu_pic = 50
     # dis_x = []
     # dis_y = []
+    (ALPHA, BETA, RHO, Q,T) = (1.0,2.0,0.5,100.0,0.033)
     # 28
-    # 划分最大的
     length = SVEM1.shape[1]//s_pic+2
     new_mx = np.zeros((SVEM1.shape[0],length))
     # 27
@@ -92,8 +92,7 @@ def SVEM():
         new_mx[:,i] = SVEM1[:,i*s_pic]
     new_mx[:,-1] = SVEM1[:,-1]
 
-
-    # 最大可行解空间矩阵
+        # 最大可行解空间矩阵
     length = SVEM1.shape[1]//solu_pic+2
     solu_mx = np.zeros((SVEM1.shape[0],length))
     # 27
@@ -117,7 +116,7 @@ if __name__ == "__main__":
     # 矩阵写入表格
     import xlwt 
     from Pretreatment import SVEM
-    SVEM1,Ju_mx,so_mx = SVEM()
+    SVEM1,Ju_mx = SVEM()
     filename = xlwt.Workbook() #创建工作簿
     sheet1 = filename.add_sheet(u'sheet1',cell_overwrite_ok=True) #创建sheet
     [h,l]=Ju_mx.shape #h为行数，l为列数
@@ -128,7 +127,4 @@ if __name__ == "__main__":
 
     plt.matshow(SVEM1)
     plt.matshow(Ju_mx)
-    plt.matshow(so_mx)
     plt.show()
-
-

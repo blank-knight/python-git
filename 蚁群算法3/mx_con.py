@@ -18,7 +18,7 @@ subway = subway()
     预处理模块
 '''
 # 读取表格数据
-data = xlrd.open_workbook(r'/home/storm/桌面/蚁群存储信息/列车数据3.xlsx')
+data = xlrd.open_workbook(r'/home/storm/桌面/蚁群存储信息/列车数据.xlsx')
 table = data.sheets()[0]
 # 获取列表的行列，并构建相应的矩阵存储数据
 rowNum = table.nrows
@@ -86,10 +86,9 @@ def V_E_cal(cla,x,start,end,vk,ik,R,L,v_lim):
 '''
     构建距离、速度、能耗可行解矩阵,初始化
 '''
-# (ALPHA, BETA,R,NUM,ITER,TIME) = (3,2,0.7,1,10,500)
-(ALPHA, BETA) = (3.0,2.0)
+(ALPHA, BETA, RHO, Q,T) = (2.0,4.0,0.4,400.0,150)
 # 计算可行速度节点(注意，这里不能出现50整数倍的距离)
-s_pic = 400
+s_pic = 50
 s_sli = s_max//s_pic+1
 v_sli = v_max//1
 # 获取最大可行解矩阵，将LK设为信息素矩阵
@@ -166,5 +165,3 @@ plt.title('LK')
 plt.matshow(SVEM2)
 plt.title('SVEM2')
 plt.show()
-
-

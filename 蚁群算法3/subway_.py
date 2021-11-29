@@ -1,7 +1,7 @@
 import numpy as np
 import xlrd
 # 读取表格数据
-data = xlrd.open_workbook(r'/home/storm/桌面/蚁群存储信息/列车数据3.xlsx')
+data = xlrd.open_workbook(r'/home/storm/桌面/蚁群存储信息/列车数据.xlsx')
 table = data.sheets()[0]
 # 获取列表的行列，并构建相应的矩阵存储数据
 rowNum = table.nrows
@@ -24,7 +24,7 @@ class subway:
         self.C = 0.001807
         self.c = 600
         self.s = 0.01
-        self.s_sli = 400
+        self.s_sli = 50
         self.g = 9.98
 
     # KN
@@ -159,12 +159,6 @@ class subway:
                 for j in range(start*100,loc_[i]*100):
                     B_j = self.f_B(vk)
                     W_j = self.W_calculate(vk,ik,R,L)
-                    if np.isnan(vk) or vk < 0:
-                        print("制动vk是：",vk)
-                        return -1,0,t,4
-                    # print("B_j：{0}，W_j:{1}".format(B_j,W_j))
-                    print("vk:",vk)
-                    print("j：{0}".format(j))
                     a = (B_j+W_j)/self.M
                     t += self.s/1000/vk
                     vk = pow(vk/3.6*vk/3.6-2*a*self.s,1/2)*3.6
@@ -172,7 +166,6 @@ class subway:
             elif start <= loc_[i] and end <= loc_[i]:
                 for j in range(start*100,loc_[i]*100):
                     if np.isnan(vk) or vk < 0:
-                        print("制动vk是：",vk)
                         return -1,0,t,4
                     B_j = self.f_B(vk)
                     W_j = self.W_calculate(vk,ik,R,L)
@@ -194,8 +187,6 @@ class subway:
     def Qian_yin(self,start,end,vk,ik,Rk,Lk,mx,v_lim):
         E_q = 0
         t = 0
-        print("start:",start)
-        print("end:",end)
         # 判断是否会50m的区间内路况是否有变化
         if np.where(mx[:,0]>start)[0][0] == np.where(mx[:,0]>end)[0][0]:
             for i in range(self.s_sli*100):
