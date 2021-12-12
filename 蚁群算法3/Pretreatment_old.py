@@ -26,11 +26,6 @@ for rown in range(table.nrows):
 matrix = matrix_.astype(int)
 v_max = max(matrix[:,1])
 s_max = matrix[-1,0]
-# 分别为牵引结束的最大、最小速度和巡航的最低速度
-v_up = matrix[0,1]*2/3
-v_dowm = matrix[0,1]*1/2
-v_lower = min(matrix[:,1])
-v_re = [v_up,v_dowm,v_lower]
 
 def SVEM():
     SVEM1 = np.zeros((v_max,s_max))
@@ -115,7 +110,7 @@ def SVEM():
     #             break
     # plt.scatter(dis_x,dis_y)
     # plt.show()
-    return SVEM1,new_mx,solu_mx,v_re
+    return SVEM1,new_mx,solu_mx
 
 if __name__ == "__main__":
     # 矩阵写入表格

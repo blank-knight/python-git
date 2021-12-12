@@ -28,7 +28,7 @@ s_pic = 50
 time_start = time.time()
 
 subway = subway()
-SVEM1,Ju_mx,sol_mx,v_re = SVEM()
+SVEM1,Ju_mx,sol_mx,_ = SVEM()
 
 solu_x = []
 solu_y = []
@@ -45,12 +45,53 @@ solu_y[0] = 0
 solu_y[-1] = 0
 
 '''
+    随机数生成
+'''
+# def p_random(arr1,arr2):
+#     assert len(arr1) == len(arr2), "Length does not match."
+#     assert sum(arr2) == 1 , "Total rate is not 1."
+
+#     # 提取小数点后面的位数。0.209年变209(str)
+#     sup_list = [len(str(i).split(".")[-1]) for i in arr2]
+#     # 找到最大的位数。1000
+#     top = 10 ** max(sup_list)
+#     # 将其全部化为整数。209(int)
+#     new_rate = [int(i*top) for i in arr2]
+#     rate_arr = []
+#     # 依次求和。209，500，1000
+#     for i in range(1,len(new_rate)+1):
+#         rate_arr.append(sum(new_rate[:i]))
+#     rand = random.randint(1,top)
+#     data = None
+#     # 判断产生的随机数在哪个区间段
+#     for i in range(len(rate_arr)):
+#         if rand <= rate_arr[i]:
+#             data = arr1[i]
+#             break
+#     return data
+
+'''
     蚁群模块
 '''
 
 # 能耗，时间启发因子，信息素衰减因子，蚂蚁数量，迭代次数,时间限制(s)
-(ALPHA, BETA,R,NUM,ITER,TIME) = (2,1,0.5,10,10,180)
+(ALPHA, BETA,R,NUM,ITER,TIME) = (2,1,0.5,1,10,180)
 col = Ju_mx.shape[1]+2
+# d_x = []
+# d_y = []
+# for i in range(Ju_mx.shape[1]):
+#     lis = list(Ju_mx[:,i])
+#     for j in range(len(lis)):
+#         if lis.pop(-1) == 0:
+#             d_y.append(j+1)
+#             d_x.append(i+1)
+#             break
+# d_x.insert(0,0)
+# d_y.insert(0,0)
+# d_x.insert(len(d_x),d_x[-1]+1)
+# d_y.insert(len(d_y)+1,0)
+# plt.plot(d_x,d_y)
+# plt.show()
 
 # 蚁群信息矩阵，后两维表示当前蚂蚁的总能耗和总时间，前面的表示蚂蚁的状态
 ant_smx = np.zeros((NUM,col))
@@ -65,65 +106,78 @@ T_st,ant_tmx[:,0] = TCH[-vk,1],TCH[-vk,1]*3600
 # 把ECH变为信息素矩阵
 LCH = np.zeros((ECH.shape[0],ECH.shape[1]))
 # 存储当前最优，第一行为速度，第二行为能耗，第三行为时间，第四行为状态，后两列均为总能耗和总时间
-best_mx = np.zeros((3,col)) 
-best_mx[:,:] = 9999999
+best_mx = np.zeros((4,col)) 
+best_mx[:,:] = 9999999999
 tm = 0
 
 # LK：信息素，SCH：状态(1位牵引，2为巡航，3为惰行，4为制动)，ECH：能耗，TCH：时间，SVEM2：可行解矩阵
 # 返回下一个站点信息素最大的值,也就是最有可能选择的状态
-def next_sta_pro(state,x,start,end,vk,ik,R,L,v_lim,pro):
-    if state == 0:
-        if pro > 0.7 or best_mx[0,0] == 9999999:
-            v_q,E_q,t_q = subway.Qian_yin(start,end,vk,ik,R,L,matrix,v_lim)
-        else:
-            v_q,E_q,t_q = best_mx[0,x],best_mx[1,x],best_mx[2,x]
-        return v_q,E_q,t_q
-    if state == 1:
-        if pro < 0.7 or best_mx[0,0] == 9999999:
-            v_d,E_d,t_d = subway.Duo_xing(start,end,vk,ik,R,L,matrix,v_lim)
-        else:
-            v_d,E_d,t_d = best_mx[0,x],best_mx[1,x],best_mx[2,x]
-        return v_d,E_d,t_d
-    if state == 2:
-        v_x,E_x,t_x = subway.Xun_hang(start,end,vk,ik,R,L,matrix)
-         
-v_up = v_re[0]
-v_down = v_re[1]
-v_lower = v_re[2]
-# 考虑第一种情况
-def Q_D_X_Z(x,start,end,vk,ik,R,L,v_lim):
-    for m in range(ITER):
-        print("当前迭代次数是{0}".format(m))
-        # 逐个蚂蚁开始跑
-        for i in range(NUM):
-            # 每只蚂蚁都要从头初始化参数
-            print("当前是第{0}只蚂蚁".format(i))
-            vk = int(vs)
-            E_tol = E_st
-            T_tol = T_st*3600
-            s = s_pic
-            # print("初始能耗是",E_tol)
-            # time.sleep(2)
-            # 蚂蚁从开头跑到结尾，除了开头的牵引和最后的制动没有加进来
-            '''
-                注意：这里有部分问题，矩阵和最后绘图对不上，s_sli为27
-            '''
-            for j in range(1,s_sli-1):
-                if j < s_sli-2:
-                    print(j)
-                    s += s_pic
-                    end = s+s_pic
-                    s_id = np.where(matrix[:,0]>s)[0][0]
-                    v_li = matrix[s_id,1]
-                    ik = matrix[s_id,2]
-                    R = matrix[s_id,3]
-                    L = matrix[s_id,4]
-                    pro = random.random()
-                    if vk <= v_re[0]:
-                    # j表示当前列数也就是位置
-                        flag,next_v,next_E,next_T,next_sta = next_sta_pro(0,j,s,end,vk,ik,R,L,v_li,pro)
-                    # flag为0说明此蚂蚁走进了死胡同，放弃此蚂蚁
-                    if flag == 0:
+def next_sta_pro(x,start,end,vk,ik,R,L,v_lim):
+    v_q,E_q,t_q = subway.Qian_yin(start,end,vk,ik,R,L,matrix,v_lim)
+    v_x,E_x,t_x = subway.Xun_hang(start,end,vk,ik,R,L,matrix)
+    v_d,E_d,t_d = subway.Duo_xing(start,end,vk,ik,R,L,matrix,v_lim)
+    print("当前横坐标为{0}".format(x))
+    v_lis2,E_lis1,T_lis1,SC,LK = [],[],[],[],[0,0,0]
+    v_lis2.extend([int(v_q),int(v_x),int(v_d)])
+    pro = random.random()
+    E_lis1.extend([int(E_q),int(E_x),int(E_d)])
+    T_lis1.extend([t_q,t_x,t_d])
+    SC.extend([1,2,3])
+    ch_lis = [0,1,2]
+    flag = 1
+    ET_tol = 0
+    for i in range(3):
+        # 如果不满足条件，就将对应的元素从ch_lis删除
+        if v_lis2[i] >= v_lim or v_lis2[i] < 0:
+            del ch_lis[ch_lis.index(i)]
+            continue
+        # Ju_mx[-51,5]相当于Ju_mx[29,5]，而python矩阵正向下标是从0开始的，逆向是从-1开始
+        # 所以Ju_mx[-51，5] == 1，但v_q是正向计算的，v_q == 51时是超速的，
+        # 而我这里判断没有超速，所以出错了，应该再减个1
+        # 正逆向列表推导公式lis[i] = lis[-(len(lis)-i)]
+        # print("v_lis:",v_lis2)
+        # print("v_lim:",v_lim)
+        # print("v_lis2[i]:",v_lis2[i])
+        if Ju_mx[-v_lis2[i]-1,x] == 0 or T_lis1[i] <= 0:
+            del ch_lis[ch_lis.index(i)]
+    # 如果此解为边缘解，直接将其信息素设为0，踢出可行解空间
+    if ch_lis == []:
+        # print("--------------------")
+        # print(vk)
+        LCH[-vk-1,x] = -99
+        Ju_mx[-vk-1,x] = 0 
+        flag = 0
+        return flag,0,0,0,0
+    for i in ch_lis:
+        # print("vk为：",vk)
+        # print("能耗列表为：",E_lis1)
+        # print("时间列表为：",T_lis1)
+        # print("速度列表为:",v_lis2)
+        # print("ch_lis列表为:",ch_lis)
+        ET_tol += pow(1/E_lis1[i], ALPHA)*pow(1/T_lis1[i], BETA)
+    # 以0.4的概率进行随机游走
+    if pro < 0.2:
+        id = random.choice(ch_lis)
+        print("随机变异的id为",id)
+        # print(v_lis2)
+        # print(v_lim)
+        # 计算信息素 
+        E = pow(1/E_lis1[i], ALPHA)
+        T = pow(1/T_lis1[i], BETA)
+        LCH[-v_lis2[id]-1,x] = E*T/ET_tol+LCH[-v_lis2[id]-1,x]*R
+        return 1,v_lis2[id],E_lis1[id],int(T_lis1[id]*3600),SC[id]
+    for i in ch_lis:
+        # 如果有最优解，优先走最优解
+        if v_lis2[i] == best_mx[0,x]:
+            return 1,best_mx[0,x],best_mx[1,x],best_mx[2,x],best_mx[3,x]
+        # 计算信息素,E很大，T很小，导致二者造成的平衡不一致 
+        E = pow(1/E_lis1[i], ALPHA)
+        T = pow(1/T_lis1[i], BETA)
+        LCH[-v_lis2[i]-1,x] = E*T/ET_tol+LCH[-v_lis2[i]-1,x]*R
+        LK[i] = LCH[-v_lis2[i]-1,x] 
+    # 选择信息素最大的
+    id = LK.index(max(LK))
+    return 1,v_lis2[id],E_lis1[id],int(T_lis1[id]*3600),SC[id]
 
 '''
     注意：我这里时间改为s
@@ -253,7 +307,7 @@ else:
     plt.ylabel("Speed")
     plt.title("ene-factor:3,time-factor:2,imf-factor:0.7")
     plt.text(0,80,'ant-num:10,loop-num:10,time-lim:500')
-
+    
     # plt.plot(d_x,d_y)
     plt.show()
     # print(dis_x)
